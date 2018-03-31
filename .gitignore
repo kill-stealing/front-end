@@ -1,0 +1,13 @@
+*.class
+*.classpath
+*.project
+*.prefs
+org.eclipse.*.xml
+
+spring-boot-mybatis/.settings/
+spring-boot-mybatis/target/
+
+
+angularFoundation/.git/
+angularFoundation/node_modules/
+
