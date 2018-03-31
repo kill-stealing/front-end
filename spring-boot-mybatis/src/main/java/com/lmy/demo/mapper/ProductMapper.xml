@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lmy.demo.mapper.ProductMapper">
+	<select id="getProducts" resultType="com.lmy.demo.domain.Product">
+		select a1.*,(select
+		GROUP_CONCAT(a3.category) from product_category a2,category a3
+		where a2.product_id=a1.id and a2.category_id=a3.id ) as categories from product a1;
+	</select>
+	<select id="getProductById" parameterType="int" resultType="com.lmy.demo.domain.Product">
+		select * from product where id=#{_parameter}
+	</select>
+	<select id="getProductsByTitle" parameterType="java.lang.String" resultType="com.lmy.demo.domain.Product">
+		select a1.*,(select
+		GROUP_CONCAT(a3.category) from product_category a2,category a3
+		where a2.product_id=a1.id and a2.category_id=a3.id ) as categories from product a1 where a1.title like '%${_parameter}%'
+	</select>
+	<select id="getProductsByPrice" parameterType="float" resultType="com.lmy.demo.domain.Product">
+		select a1.*,(select GROUP_CONCAT(a3.category) from product_category a2,category a3
+		 where a2.product_id=a1.id and a2.category_id=a3.id ) as categories from product a1
+		 where a1.price &lt; #{_parameter}
+	</select>
+	<select id="getProductsByCategory" parameterType="int" resultType="com.lmy.demo.domain.Product">
+		select a1.* from product a1,product_category a2
+ 		where a1.id=a2.product_id and a2.category_id =#{_parameter}
+	</select>
+	<select id="getProductsBySearch" parameterType="com.lmy.demo.domain.Product" resultType="com.lmy.demo.domain.Product">
+		SELECT distinct a1.* FROM product a1,product_category a2 where 1=1
+		<if test="title!=null">
+			and a1.title like '%${title}%'
+		</if>
+		<if test="category>0">
+			and a1.id=a2.product_id and a2.category_id=#{category}
+		</if>
+		<if test="price>0">
+			and a1.price &lt; #{price}
+		</if>
+	</select>
+	
+	<update id="doUpdateProduct" parameterType="com.lmy.demo.domain.Product">
+		update product set price=#{price} where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lmy.demo.mapper.CommentMapper">
+	<select id="getCommentsByProductId" parameterType="int" resultType="com.lmy.demo.domain.Comment">
+		SELECT * FROM `comment` a1 where a1.product_id=#{_parameter}
+	</select>
+	
+	<insert id="doInsertComment" parameterType="com.lmy.demo.domain.Comment" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="int">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into comment values(null,#{productId},#{timestamp},
+		#{user},#{rating},#{content})
+	</insert>
+</mapper>
